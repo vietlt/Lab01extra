@@ -36,24 +36,24 @@ resource "aws_instance" "windows_vm" {
   }
 }
 
-resource "null_resource" "configure" {
-  triggers = {
-    # linux_vm_ids = "${aws_instance.linux_vm.id}"
-    windows_vm_ids = "${aws_instance.windows_vm.id}"
-  }
+# resource "null_resource" "configure" {
+#   triggers = {
+#     # linux_vm_ids = "${aws_instance.linux_vm.id}"
+#     windows_vm_ids = "${aws_instance.windows_vm.id}"
+#   }
 
-  provisioner "local-exec" {
-    when    = create
-    # echo $ubuntu_ip > inventory.txt;
-    command = <<EOT
+#   provisioner "local-exec" {
+#     when    = create
+#     # echo $ubuntu_ip > inventory.txt;
+#     command = <<EOT
       
-      echo $windows_ip >> inventory.txt;
-      ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook ./main.yml -i inventory.txt
-    EOT
+#       echo $windows_ip >> inventory.txt;
+#       ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook ./main.yml -i inventory.txt
+#     EOT
 
-    environment = {
-      # ubuntu_ip   = "Ubuntu ansible_host=${aws_instance.linux_vm.public_ip} ansible_connection=ssh ansible_user=ubuntu ansible_ssh_private_key_file=terraform-key-pair.pem"
-      windows_ip  = "Windows ansible_host=${aws_instance.windows_vm.public_ip} ansible_connection=winrm ansible_user=administrator ansible_winrm_server_cert_validation=ignore ansible_password=${rsadecrypt(aws_instance.windows_vm.password_data,file("terraform-key-pair.pem"))}"
-    }
-  }  
-}
+#     environment = {
+#       # ubuntu_ip   = "Ubuntu ansible_host=${aws_instance.linux_vm.public_ip} ansible_connection=ssh ansible_user=ubuntu ansible_ssh_private_key_file=terraform-key-pair.pem"
+#       windows_ip  = "Windows ansible_host=${aws_instance.windows_vm.public_ip} ansible_connection=winrm ansible_user=administrator ansible_winrm_server_cert_validation=ignore ansible_password=${rsadecrypt(aws_instance.windows_vm.password_data,file("terraform-key-pair.pem"))}"
+#     }
+#   }  
+# }
